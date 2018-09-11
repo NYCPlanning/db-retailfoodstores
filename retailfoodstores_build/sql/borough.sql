@@ -1,6 +1,6 @@
 -- adding a borough field with the borough value for each record
 ALTER TABLE dcp_retailfoodstores
-ADD COLUMN borough;
+ADD COLUMN borough text;
 
 UPDATE dcp_retailfoodstores
 SET borough = 'Manhattan'
