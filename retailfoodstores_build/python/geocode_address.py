@@ -24,7 +24,7 @@ app_key = config['GEOCLIENT_APP_KEY']
 engine = sql.create_engine('postgresql://{}@localhost:5432/{}'.format(DBUSER, DBNAME))
 
 # read in retail stores table
-retail = pd.read_sql_query('SELECT county, license_number, street_number, street_name, city, zip_code FROM nys_retailfoodstores WHERE county IS NOT NULL AND license_number IS NOT NULL AND street_number IS NOT NULL AND street_name IS NOT NULL AND city IS NOT NULL AND zip_code IS NOT NULL AND geom IS NULL LIMIT 2000;', engine)
+retail = pd.read_sql_query('SELECT borough, license_number, street_number, street_name, zip_code FROM dcp_retailfoodstores WHERE borough IS NOT NULL AND license_number IS NOT NULL AND street_number IS NOT NULL AND street_name IS NOT NULL AND zip_code IS NOT NULL AND geom IS NULL LIMIT 2000;', engine)
 
 # replace single quotes with doubled single quotes for psql compatibility
 retail['street_number'] = [i.replace("'", "''") for i in retail['street_number']]
