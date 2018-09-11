@@ -1,1 +1,1 @@
-# NYS Food Stores Database
+# NYC Food Stores Database
