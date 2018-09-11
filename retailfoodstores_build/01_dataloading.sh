@@ -13,4 +13,4 @@ cd '/prod/data-loading-scripts'
 
 ## Open_datasets - PULLING FROM OPEN DATA
 echo 'Loading open source datasets...'
-node loader.js install nys_retailfoodstores, 
+node loader.js install nys_retailfoodstores
