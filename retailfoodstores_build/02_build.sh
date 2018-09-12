@@ -12,4 +12,9 @@ start=$(date +'%T')
 echo "Starting to build retail food stores database"
 psql -U $DBUSER -d $DBNAME -f $REPOLOC/retailfoodstores_build/sql/create.sql
 psql -U $DBUSER -d $DBNAME -f $REPOLOC/retailfoodstores_build/sql/borough.sql
+echo 'Geocoding geoms...'
+source activate py2
+python $REPOLOC/retailfoodstores_build/python/geocode_address.py
+source deactivate
+
 echo "Done!"
