@@ -24,7 +24,7 @@ app_key = config['GEOCLIENT_APP_KEY']
 engine = sql.create_engine('postgresql://{}@localhost:5432/{}'.format(DBUSER, DBNAME))
 
 # read in retail stores table
-retail = pd.read_sql_query('SELECT borough, license_number, street_number, street_name, zip_code FROM dcp_retailfoodstores WHERE borough IS NOT NULL AND license_number IS NOT NULL AND street_number IS NOT NULL AND street_name IS NOT NULL AND zip_code IS NOT NULL AND geom IS NULL LIMIT 2000;', engine)
+retail = pd.read_sql_query('SELECT license_number, street_number, street_name, borough FROM dcp_retailfoodstores WHERE borough IS NOT NULL AND license_number IS NOT NULL AND street_number IS NOT NULL AND street_name IS NOT NULL AND geom IS NULL;', engine)
 
 # replace single quotes with doubled single quotes for psql compatibility
 retail['street_number'] = [i.replace("'", "''") for i in retail['street_number']]
@@ -36,10 +36,6 @@ g = Geoclient(app_id, app_key)
 def get_loc(num, street, borough):
     geo = g.address(num, street, borough)
     try:
-        b_in = geo['license_number']
-    except:
-        b_in = 'none'
-    try:
         lat = geo['latitude']
     except:
         lat = 'none'
@@ -47,8 +43,7 @@ def get_loc(num, street, borough):
         lon = geo['longitude']
     except:
         lon = 'none'
-    loc = pd.DataFrame({'bin' : [b_in],
-                        'lat' : [lat],
+    loc = pd.DataFrame({'lat' : [lat],
                         'lon' : [lon]})
     return(loc)
 
@@ -56,7 +51,7 @@ locs = pd.DataFrame()
 for i in range(len(retail)):
     new = get_loc(retail['street_number'][i],
                   retail['street_name'][i],
-                  retail['city'][i]
+                  retail['borough'][i]
     )
     locs = pd.concat((locs, new))
 locs.reset_index(inplace = True)
