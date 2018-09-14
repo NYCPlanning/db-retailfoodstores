@@ -37,8 +37,10 @@ def get_loc(num, street, borough):
     geo = g.address(num, street, borough)
     try:
         lat = geo['latitude']
-    except:
-        lat = 'none'
+    except KeyError:
+        try: lat = geo['latitude']
+        except KeyError:
+            lat = 'none'
     try:
         lon = geo['longitude']
     except:
@@ -61,7 +63,7 @@ for i in range(len(retail)):
     if (locs['lat'][i] != 'none') & (locs['lon'][i] != 'none'):
         upd = "UPDATE dcp_retailfoodstores a SET geom = ST_SetSRID(ST_MakePoint(" + str(locs['lon'][i]) + ", " + str(locs['lat'][i]) + "), 4326) WHERE a.license_number = '" + retail['license_number'][i] + "';"
     elif locs['lat'][i] == 'none':
-        upd = "UPDATE dcp_retailfoodstores a SET geom = NULL WHERE a.license_number = '" + housing['license_number'][i] + "';"
+        upd = "UPDATE dcp_retailfoodstores a SET geom = NULL WHERE a.license_number = '" + retail['license_number'][i] + "';"
     engine.execute(upd)
 
 # not deleting because if I ever figure it out this is probably a better way of doing this...
