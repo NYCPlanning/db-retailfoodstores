@@ -11,3 +11,6 @@ CREATE TABLE dcp_retailfoodstores AS (
 );
 -- add geometry column
 SELECT AddGeometryColumn ('public','dcp_retailfoodstores','geom',4326,'Geometry',2);
+
+-- add normalized street_name column
+ALTER TABLE dcp_retailfoodstores ADD COLUMN street_name_normalized text;
