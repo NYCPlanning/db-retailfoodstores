@@ -71,29 +71,6 @@ for i in range(len(retail)):
     engine.execute(upd)
 
 
-# Read in retail stores table where values of geom is null and street_number is not null
-retail_2 = pd.read_sql_query('SELECT street_number, location, borough FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND geom IS NULL;', engine)
-
-# https://github.com/datamade/usaddress (repo for python usaddress lib)
-# Parse the location value to get a more accurate street name
-def parse_name(location):
-    parsed = usaddress.parse(location)
-    parsed_concat = ''
-    if (parsed[0][1] == 'StreetNamePreDirectional'):
-        parsed_concat += parsed[0][0]
-        if (parsed[1][1] == 'StreetName'):
-            parsed_concat += parsed[1][0]
-            if (parsed[2][1] == 'StreetNamePostType'):
-                parsed_concat += parsed[2][0]
-
-    if(parsed[0][1] == 'StreetName'):
-        parsed_concat += parsed[0][0]
-        if (parsed[1][1] == 'StreetNamePostType'):
-            parsed_concat += parsed[1][0]
-            
-    # returns the street name as a string
-    return(parsed_concat)
-
 # not deleting because if I ever figure it out this is probably a better way of doing this...
 #md = sql.MetaData(engine)
 #table = sql.Table('sca', md, autoload=True)
