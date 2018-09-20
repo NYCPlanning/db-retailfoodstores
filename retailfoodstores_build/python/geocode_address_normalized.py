@@ -48,12 +48,12 @@ def get_loc(num, street, borough):
 
 
 # Read in retail stores table where values of geom is null and street_number is not null
-retail_2 = pd.read_sql_query('SELECT street_number, location, borough, license_number FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND geom IS NULL;', engine)
+retail_2 = pd.read_sql_query('SELECT street_number, location, borough, license_number, street_name_normalized FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND street_name_normalized IS NOT NULL AND geom IS NULL;', engine)
 
 # replace single quotes with doubled single quotes for psql compatibility
 retail_2['street_number'] = [i.replace("'", "''") for i in retail_2['street_number']]
 retail_2['borough'] = [i.replace("'", "''") for i in retail_2['borough']]
-
+retail_2['street_name_normalized'] = [i.replace("'", "''") for i in retail_2['street_name_normalized']]
 
 
 locs_2 = pd.DataFrame()

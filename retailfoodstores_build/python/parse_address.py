@@ -48,12 +48,9 @@ def parse_name(location):
 
 
 # Read in retail stores table where values of geom is null and street_number is not null
-retail_2 = pd.read_sql_query('SELECT street_number, location, borough, license_number FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND geom IS NULL;', engine)
-# replace single quotes with doubled single quotes for psql compatibility
-retail_2['street_number'] = [i.replace("'", "''") for i in retail_2['street_number']]
-retail_2['borough'] = [i.replace("'", "''") for i in retail_2['borough']]
+retail_2 = pd.read_sql_query('SELECT location, license_number FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND geom IS NULL;', engine)
 
-# Update the street_name_normalized column
+# Append the parsed street name in to a list
 locs = []
 for i in range(len(retail_2)):
     new = parse_name(str(retail_2['location'][i]))
@@ -62,5 +59,5 @@ for i in range(len(retail_2)):
 
 # update retail stores normalized street name
 for i in range(len(retail_2)):
-    upd = "UPDATE dcp_retailfoodstores a SET street_name_normalized = '" + str(locs[i]) + "';"
+    upd = "UPDATE dcp_retailfoodstores a SET street_name_normalized = '" + str(locs[i]) + "' WHERE a.license_number = '" + retail_2['license_number'][i] + "';"
     engine.execute(upd)
