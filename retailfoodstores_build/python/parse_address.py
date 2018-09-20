@@ -25,7 +25,6 @@ app_key = config['GEOCLIENT_APP_KEY']
 # connect to postgres db
 engine = sql.create_engine('postgresql://{}@localhost:5432/{}'.format(DBUSER, DBNAME))
 
-
 # https://github.com/datamade/usaddress (repo for python usaddress lib)
 # Parse the location value to get a more accurate street name
 def parse_name(location):
@@ -46,14 +45,39 @@ def parse_name(location):
     # returns the street name as a string
     return(str(parsed_street_name))
 
+# Parse function for locations in Queens
+def parse_name_queens(location):
+    parsed = usaddress.parse(location)
+    parsed_street_name = ''
+    StreetNamePreDirectional = ''
+    StreetName = ''
+    StreetNamePostType = ''
+    for i in range(len(parsed)):
+        if StreetNamePreDirectional == '' and parsed[i][1] == 'StreetNamePreDirectional':
+            StreetNamePreDirectional += parsed[i][0]
+        elif StreetName == '' and parsed[i][1] == 'StreetName':
+            StreetName += parsed[i][0]
+        elif parsed[i][1] == 'StreetName':
+            StreetName += ' ' + parsed[i][0]
+        elif StreetNamePostType == '' and parsed[i][1] == 'StreetNamePostType':
+            StreetNamePostType += parsed[i][0]
+
+    StreetName = StreetName.partition(' ')[2]
+    parsed_street_name = StreetNamePreDirectional + StreetName + ' ' + StreetNamePostType
+    # returns the street name as a string
+    return(str(parsed_street_name))
+
 
 # Read in retail stores table where values of geom is null and street_number is not null
-retail_2 = pd.read_sql_query('SELECT location, license_number FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND geom IS NULL;', engine)
+retail_2 = pd.read_sql_query('SELECT location, license_number, borough FROM dcp_retailfoodstores WHERE street_number IS NOT NULL AND street_name IS NOT NULL AND license_number IS NOT NULL AND geom IS NULL;', engine)
 
 # Append the parsed street name in to a list
 locs = []
 for i in range(len(retail_2)):
-    new = parse_name(str(retail_2['location'][i]))
+    if retail_2['borough'][i] == 'Queens':
+        new = parse_name_queens(str(retail_2['location'][i]))
+    else:
+        new = parse_name(str(retail_2['location'][i]))
     locs.append(new)
 
 
