@@ -15,7 +15,7 @@ UPDATE dcp_retailfoodstores r
 SET dcp_type = 'Grocery'
 FROM  dcp_grocerystores g
 WHERE g.grocery = 'Yes'
-AND g.sf <= 2000
+AND g.sf <= 5000
 AND g.license = r.license_number;
 
 -- Update the supermarket category type of the stores into the geocoded table
@@ -23,5 +23,5 @@ UPDATE dcp_retailfoodstores r
 SET dcp_type = 'Supermarket'
 FROM  dcp_grocerystores g
 WHERE g.grocery = 'Yes'
-AND 2000 < g.sf
+AND 5000 < g.sf
 AND g.license = r.license_number;
