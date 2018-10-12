@@ -1,25 +1,3 @@
--- Categorize the big box stores
-UPDATE dcp_retailfoodstores
-SET dcp_type = 'Big Box/Chain'
-WHERE dba_name LIKE '%COSTCO%WHOLESALE%'
-OR upper(dba_name) LIKE '%BJS%CLUB%'
-OR upper(dba_name) LIKE '%TARGET%'
-OR upper(dba_name) LIKE '%CENTURY%21%'
-OR upper(dba_name) LIKE '%CVS%'
-OR upper(dba_name) LIKE 'WALGREENS%'
-OR upper(dba_name) LIKE '%BABIES%R%US%'
-OR upper(dba_name) LIKE '%TOYS%R%US%'
-OR upper(dba_name) LIKE '%DUANE%READE%'
-OR upper(dba_name) LIKE '%RITE%AID%'
-OR upper(dba_name) LIKE 'BED%BATH%&%BEYOND%'
-OR upper(dba_name) LIKE 'DOLLAR%TREE%'
-OR upper(dba_name) LIKE 'FAMILY%DOLLAR%'
-OR upper(dba_name) LIKE '%DOLLAR%GENERAL%'
-OR upper(entity_name) LIKE 'K%MART%'
-OR upper(entity_name) LIKE '%TJX%COMPANIES%'
-OR upper(entity_name) LIKE '%FIVE%BELOW%'
-OR upper(entity_name) LIKE '%LOT%LESS%';
-
 -- Categorize the gas stations with store names
 UPDATE dcp_retailfoodstores
 SET dcp_type = 'Gas Station'
@@ -40,20 +18,42 @@ OR upper(entity_name) LIKE '%PETROLEUM%'
 OR upper(entity_name) LIKE '%HESS%MART%'
 OR upper(entity_name) LIKE '%SERVICE%STATION%');
 
+
+-- Categorize the big box stores
+UPDATE dcp_retailfoodstores
+SET dcp_type = 'Big Box/Chain'
+WHERE upper(dba_name) LIKE '%COSTCO%WHOLESALE%'
+OR upper(dba_name) LIKE '%BJS%CLUB%'
+OR upper(dba_name) LIKE '%TARGET%'
+OR upper(dba_name) LIKE '%CENTURY%21%'
+OR upper(dba_name) LIKE '%CVS%'
+OR upper(dba_name) LIKE 'WALGREENS%'
+OR upper(dba_name) LIKE '%BABIES%R%US%'
+OR upper(dba_name) LIKE '%TOYS%R%US%'
+OR upper(dba_name) LIKE '%DUANE%READE%'
+OR upper(dba_name) LIKE '%RITE%AID%'
+OR upper(dba_name) LIKE 'BED%BATH%&%BEYOND%'
+OR upper(dba_name) LIKE 'DOLLAR%TREE%'
+OR upper(dba_name) LIKE 'FAMILY%DOLLAR%'
+OR upper(dba_name) LIKE '%DOLLAR%GENERAL%'
+OR upper(entity_name) LIKE 'K%MART%'
+OR upper(entity_name) LIKE '%TJX%COMPANIES%'
+OR upper(entity_name) LIKE '%FIVE%BELOW%'
+OR upper(entity_name) LIKE '%LOT%LESS%';
+
+
 -- Categorize the grocery stores with keywords and square footage
 UPDATE dcp_retailfoodstores
 SET dcp_type = 'Grocery'
 WHERE square_footage <= 5000
 AND square_footage >= 500
 AND dcp_type IS NULL
-AND (upper(dba_name) LIKE '%DELI%'
-OR upper(dba_name) LIKE '%DEL%'
+AND (upper(dba_name) LIKE '%DEL%'
 OR upper(dba_name) LIKE '%MINI%'
 OR upper(dba_name) LIKE '%MART%'
 OR upper(dba_name) LIKE '%MRKT%'
 OR upper(dba_name) LIKE '%MKT%'
 OR upper(dba_name) LIKE '%MARKET%'
-OR upper(dba_name) LIKE '%FOOD%'
 OR upper(dba_name) LIKE '%DAIRY%'
 OR upper(dba_name) LIKE '%GRCY%'
 OR upper(dba_name) LIKE '%GRCRY%'
@@ -123,7 +123,7 @@ UPDATE dcp_retailfoodstores
 SET dcp_type = 'Convenience'
 WHERE dcp_type IS NULL
 AND (square_footage <= 5000
-    AND square_footage > 0
+    AND square_footage > 100
     AND (upper(dba_name) LIKE '%CONVENIEN%'
     OR upper(dba_name) LIKE '%CONV%'
     OR upper(dba_name) LIKE '%DELI%'
@@ -140,29 +140,19 @@ AND (square_footage <= 5000
     OR upper(dba_name) LIKE '%PHARMACY%'
     OR upper(dba_name) LIKE '%SMOKE%'
     OR upper(dba_name) LIKE '%BAGEL%'
-    OR upper(dba_name) LIKE '%GRILL%'
     OR upper(dba_name) LIKE '%QUICK%'
     OR upper(dba_name) LIKE '%DOLLAR%'
     OR upper(dba_name) LIKE '%NEWS%'
-    OR upper(dba_name) LIKE '%JUICE%'
     OR upper(dba_name) LIKE '%BEER%'
-    OR upper(dba_name) LIKE '%COFFEE%'
     OR upper(dba_name) LIKE '%CHOCOLAT%'
     OR upper(dba_name) LIKE '%BEVERAGE%'
     OR upper(dba_name) LIKE '%LIQUOR%'
-    OR upper(dba_name) LIKE '%CAFE%'
     OR upper(dba_name) LIKE '%SWEET%'
-    OR upper(dba_name) LIKE '%BAKERY%'
-    OR upper(dba_name) LIKE '%BREAD%'
-    OR upper(dba_name) LIKE '%PASTRY%'
-    OR upper(dba_name) LIKE '%SANDWICH%'))
+    OR upper(dba_name) LIKE '%BREAD%'))
 
     OR (upper(dba_name) LIKE '%7%ELEVEN%'
-        OR upper(dba_name) LIKE 'EDIBLE%ARRANGEMENTS%'
         OR upper(dba_name) LIKE 'GENERAL%NUTRITION%'
         OR upper(dba_name) LIKE 'GNC%'
-        OR upper(dba_name) LIKE 'JUICE%PRESS%'
-        OR upper(dba_name) LIKE '%BAKED%BY%MELISSA%'
         OR upper(dba_name) LIKE '%$1%'
         OR upper(dba_name) LIKE '%DISCOUNT%'
         OR upper(dba_name) LIKE '%99%'
@@ -170,3 +160,22 @@ AND (square_footage <= 5000
         OR upper(dba_name) LIKE '%99%C%'
         OR upper(dba_name) LIKE '%DEAL%'
         OR upper(dba_name) LIKE '%CENT%');
+
+
+
+-- Categorize the Restaurants and Bakeries with store names and square footage
+UPDATE dcp_retailfoodstores
+SET dcp_type = 'Restaurant/Bakery'
+WHERE dcp_type IS NULL
+  AND square_footage > 200
+  AND (upper(dba_name) LIKE 'EDIBLE%ARRANGEMENTS%'
+  OR upper(dba_name) LIKE '%BAKED%BY%MELISSA%'
+  OR upper(dba_name) LIKE '%CAFE%'
+  OR upper(dba_name) LIKE '%COFFEE%'
+  OR upper(dba_name) LIKE '%BAKERY%'
+  OR upper(dba_name) LIKE 'JUICE%PRESS%'
+  OR upper(dba_name) LIKE '%PASTRY%'
+  OR upper(dba_name) LIKE '%SANDWICH%'
+  OR upper(dba_name) LIKE '%SUSHI%'
+  OR upper(dba_name) LIKE '%JUICE%'
+);
